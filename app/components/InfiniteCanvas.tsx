@@ -100,14 +100,14 @@ export default function InfiniteCanvas({
   }, []);
 
   // Handle mouse down for shape drawing
-  const handleMouseDown = (e: fabric.IEvent<MouseEvent>) => {
+  const handleMouseDown = (e: fabric.IEvent) => {
     if (tool === 'select' || tool === 'pen') return;
 
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
     setIsDrawing(true);
-    const pointer = canvas.getPointer(e.e);
+    const pointer = canvas.getPointer(e.e as MouseEvent);
     startPointRef.current = { x: pointer.x, y: pointer.y };
 
     let object: fabric.Object | null = null;
@@ -178,13 +178,13 @@ export default function InfiniteCanvas({
   };
 
   // Handle mouse move for shape drawing
-  const handleMouseMove = (e: fabric.IEvent<MouseEvent>) => {
+  const handleMouseMove = (e: fabric.IEvent) => {
     if (!isDrawing || !drawingObjectRef.current || !startPointRef.current) return;
 
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
-    const pointer = canvas.getPointer(e.e);
+    const pointer = canvas.getPointer(e.e as MouseEvent);
     const object = drawingObjectRef.current;
 
     switch (tool) {
