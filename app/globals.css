@@ -2,15 +2,177 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@layer base {
+  :root {
+    /* Color Variables from Style Guide */
+    --color-primary: #0D91FD;
+    --color-primary-dark: #014379;
+    --color-primary-light: #5DB5FE;
+    --color-surface-low: #021A2E;
+    --color-surface-mid: #014379;
+    --color-text-primary: #C2E3FE;
+    --color-text-secondary: #5DB5FE;
+    --color-border: rgba(13, 145, 253, 0.25);
+    --color-canvas: #121212;
+
+    /* Semantic Colors */
+    --color-success: #10B981;
+    --color-warning: #F59E0B;
+    --color-error: #EF4444;
+
+    /* Shadows */
+    --shadow-island: 0 1px 5px rgba(0, 0, 0, 0.4);
+    --shadow-dropdown: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* Accessible focus ring */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
 
-html,
-body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
+@layer components {
+  /* Floating island container */
+  .island {
+    @apply bg-surface-mid rounded-lg;
+    box-shadow: var(--shadow-island);
+    border: 1px solid var(--color-border);
+  }
+
+  /* Tool button styles */
+  .tool-btn {
+    @apply flex items-center justify-center;
+    @apply w-8 h-8 rounded-md;
+    @apply text-text-primary;
+    @apply transition-all duration-150;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .tool-btn:hover {
+    @apply bg-primary/20;
+  }
+
+  .tool-btn.active {
+    @apply bg-primary text-surface-low;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply px-4 py-2 rounded-md;
+    @apply bg-primary text-white font-semibold;
+    @apply transition-all duration-150;
+  }
+
+  .btn-primary:hover {
+    @apply bg-primary-light;
+  }
+
+  .btn-primary:active {
+    @apply bg-primary-dark;
+  }
+
+  /* Secondary button (outlined) */
+  .btn-secondary {
+    @apply px-4 py-2 rounded-md;
+    @apply bg-transparent text-primary font-semibold;
+    @apply border-2 border-primary;
+    @apply transition-all duration-150;
+  }
+
+  .btn-secondary:hover {
+    @apply bg-primary/10;
+  }
+
+  /* Ghost button */
+  .btn-ghost {
+    @apply px-4 py-2 rounded-md;
+    @apply bg-transparent text-text-primary font-semibold;
+    @apply transition-all duration-150;
+  }
+
+  .btn-ghost:hover {
+    @apply bg-surface-mid;
+  }
+
+  /* Icon button */
+  .btn-icon {
+    @apply flex items-center justify-center;
+    @apply w-10 h-10 rounded-md;
+    @apply text-text-primary;
+    @apply transition-all duration-150;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .btn-icon:hover {
+    @apply bg-primary/20;
+  }
+
+  .btn-icon.danger:hover {
+    @apply bg-error/20 text-error;
+  }
+
+  /* Separator */
+  .separator {
+    @apply w-px h-8 bg-border mx-1;
+  }
+
+  /* Form input */
+  .input {
+    @apply w-full px-3 py-2;
+    @apply bg-surface-low text-text-primary;
+    @apply border border-border rounded-md;
+    @apply transition-all duration-150;
+  }
+
+  .input:focus {
+    @apply outline-none ring-2 ring-primary;
+  }
+
+  /* Range slider */
+  input[type="range"] {
+    @apply appearance-none bg-surface-low rounded-full h-2 cursor-pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    @apply appearance-none w-4 h-4 rounded-full bg-primary cursor-pointer;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    @apply w-4 h-4 rounded-full bg-primary border-0 cursor-pointer;
+  }
 }

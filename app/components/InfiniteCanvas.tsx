@@ -33,7 +33,7 @@ export default function InfiniteCanvas({
     const canvas = new fabric.Canvas(canvasRef.current, {
       width: window.innerWidth,
       height: window.innerHeight,
-      backgroundColor: '#ffffff',
+      backgroundColor: '#121212', // True Black from style guide
       selection: tool === 'select',
     });
 
