@@ -76,6 +76,7 @@ export default function Toolbar({
               return (
                 <button
                   key={t.name}
+                  type="button"
                   onClick={() => setTool(t.name)}
                   className={`tool-btn ${isActive ? 'active' : ''}`}
                   title={`${t.label} (${t.shortcut})`}
@@ -98,6 +99,7 @@ export default function Toolbar({
           {/* Stroke Color */}
           <div className="relative">
             <button
+              type="button"
               onClick={() => {
                 setShowStrokePicker(!showStrokePicker);
                 setShowFillPicker(false);
@@ -136,6 +138,7 @@ export default function Toolbar({
           {/* Fill Color */}
           <div className="relative">
             <button
+              type="button"
               onClick={() => {
                 setShowFillPicker(!showFillPicker);
                 setShowStrokePicker(false);
@@ -178,6 +181,7 @@ export default function Toolbar({
                   onChange={setFillColor}
                 />
                 <button
+                  type="button"
                   onClick={() => setFillColor('transparent')}
                   className="btn-secondary w-full mt-2 text-caption"
                 >
@@ -226,6 +230,7 @@ export default function Toolbar({
           {/* Action buttons */}
           <div className="flex items-center gap-1">
             <button
+              type="button"
               onClick={onDelete}
               className="btn-icon danger"
               title="Delete Selected (Del)"
@@ -234,6 +239,7 @@ export default function Toolbar({
               <Trash2 size={20} strokeWidth={2} />
             </button>
             <button
+              type="button"
               onClick={onClear}
               className="btn-icon danger"
               title="Clear Canvas"

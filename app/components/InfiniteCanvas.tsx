@@ -1,30 +1,53 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
 import { fabric } from 'fabric';
 
 export type Tool = 'select' | 'pen' | 'line' | 'rectangle' | 'circle' | 'triangle' | 'text' | 'image';
 
+export interface InfiniteCanvasHandle {
+  deleteSelected: () => void;
+}
+
 interface InfiniteCanvasProps {
   tool: Tool;
+  setTool: (tool: Tool) => void;
   strokeColor: string;
   fillColor: string;
   strokeWidth: number;
   onImageUpload: (file: File) => void;
 }
 
-export default function InfiniteCanvas({
+const InfiniteCanvas = forwardRef<InfiniteCanvasHandle, InfiniteCanvasProps>(({
   tool,
+  setTool,
   strokeColor,
   fillColor,
   strokeWidth,
   onImageUpload,
-}: InfiniteCanvasProps) {
+}, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const drawingObjectRef = useRef<fabric.Object | null>(null);
   const startPointRef = useRef<{ x: number; y: number } | null>(null);
+
+  // Expose delete method to parent component
+  useImperativeHandle(ref, () => ({
+    deleteSelected: () => {
+      const canvas = fabricCanvasRef.current;
+      if (!canvas) return;
+
+      const activeObjects = canvas.getActiveObjects();
+      if (activeObjects.length > 0) {
+        activeObjects.forEach((obj) => {
+          canvas.remove(obj);
+        });
+        canvas.discardActiveObject();
+        canvas.renderAll();
+      }
+    },
+  }));
 
   // Initialize Fabric.js canvas
   useEffect(() => {
@@ -168,6 +191,8 @@ export default function InfiniteCanvas({
         canvas.add(object);
         canvas.setActiveObject(object);
         setIsDrawing(false);
+        // Switch to select mode after creating text to allow editing
+        setTool('select');
         return;
     }
 
@@ -282,10 +307,44 @@ export default function InfiniteCanvas({
     input.click();
   }, [tool]);
 
+  // Handle keyboard events for delete
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const canvas = fabricCanvasRef.current;
+      if (!canvas) return;
+
+      // Don't trigger delete when typing in text objects
+      const activeObject = canvas.getActiveObject();
+      if (activeObject && activeObject.type === 'i-text' && (activeObject as fabric.IText).isEditing) {
+        return;
+      }
+
+      // Handle Delete and Backspace keys
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        e.preventDefault();
+        const activeObjects = canvas.getActiveObjects();
+        if (activeObjects.length > 0) {
+          activeObjects.forEach((obj) => {
+            canvas.remove(obj);
+          });
+          canvas.discardActiveObject();
+          canvas.renderAll();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <canvas
       ref={canvasRef}
       className="absolute top-0 left-0"
     />
   );
-}
+});
+
+InfiniteCanvas.displayName = 'InfiniteCanvas';
+
+export default InfiniteCanvas;
