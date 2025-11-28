@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import InfiniteCanvas, { type Tool } from './components/InfiniteCanvas';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import InfiniteCanvas, { type Tool, type InfiniteCanvasHandle } from './components/InfiniteCanvas';
 import Toolbar from './components/Toolbar';
 
 export default function Home() {
+  const canvasRef = useRef<InfiniteCanvasHandle>(null);
   const [tool, setTool] = useState<Tool>('select');
   const [strokeColor, setStrokeColor] = useState('#C2E3FE'); // Ice Blue from style guide
   const [fillColor, setFillColor] = useState('transparent');
@@ -18,9 +19,8 @@ export default function Home() {
   }, []);
 
   const handleDelete = useCallback(() => {
-    // Dispatch delete event for Fabric.js to handle
-    const event = new KeyboardEvent('keydown', { key: 'Delete' });
-    document.dispatchEvent(event);
+    // Call the delete method on the canvas
+    canvasRef.current?.deleteSelected();
   }, []);
 
   // Keyboard shortcuts
@@ -120,7 +120,9 @@ export default function Home() {
       />
       {/* Canvas takes full viewport - toolbar floats above */}
       <InfiniteCanvas
+        ref={canvasRef}
         tool={tool}
+        setTool={setTool}
         strokeColor={strokeColor}
         fillColor={fillColor}
         strokeWidth={strokeWidth}
