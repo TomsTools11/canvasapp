@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import InfiniteCanvas, { type Tool } from './components/InfiniteCanvas';
 import Toolbar from './components/Toolbar';
 
@@ -9,7 +9,6 @@ export default function Home() {
   const [strokeColor, setStrokeColor] = useState('#000000');
   const [fillColor, setFillColor] = useState('transparent');
   const [strokeWidth, setStrokeWidth] = useState(2);
-  const canvasRef = useRef<any>(null);
 
   const handleClear = () => {
     if (confirm('Are you sure you want to clear the entire canvas?')) {
@@ -58,7 +57,6 @@ export default function Home() {
       />
       <div className="pt-16 w-full h-full">
         <InfiniteCanvas
-          ref={canvasRef}
           tool={tool}
           strokeColor={strokeColor}
           fillColor={fillColor}
